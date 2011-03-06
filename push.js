@@ -17,7 +17,8 @@ server = http.createServer(function(req, res){
       
     case '/json.js':
     case '/chat.html':
-      fs.readFile(__dirname + '/lib/socket.io/example' + path, function(err, data){
+    case '/chat2.html':
+      fs.readFile(__dirname + path, function(err, data){
         if (err) return send404(res);
         res.writeHead(200, {'Content-Type': path == 'json.js' ? 'text/javascript' : 'text/html'})
         res.write(data, 'utf8');
@@ -37,6 +38,8 @@ send404 = function(res){
 
 server.listen(8080);
 
+var users = [];
+
 // socket.io, I choose you
 // simplest chat application evar
 var io = io.listen(server)
@@ -45,16 +48,39 @@ var io = io.listen(server)
 io.on('connection', function(client){
   client.send({ buffer: buffer });
   client.broadcast({ announcement: client.sessionId + ' connected' });
-  
+
   client.on('message', function(message){
-    var msg = { message: [client.sessionId, message] };
-    buffer.push(msg);
-    if (buffer.length > 15) buffer.shift();
-    client.broadcast(msg);
+    // Initial connect will set userid
+    if (client.userId == undefined) {
+      try {
+        auth = JSON.parse(message);
+      } catch (err) {
+        sys.log("No well-formed data from client " + client.sessionId + " received. Data: " + message);
+      }
+      var found = false;
+      for (u in users) {
+        if (users[u].hash == auth.hash && users[u].userId == auth.userId) {
+	  client.userId = users[u].userId;
+	  users[client.userId].sessionId = client.sessionId;
+	  sys.log("UserID " + client.userId + " is using session " + client.sessionId + "\n");
+	  found = true;
+	}
+      }
+      if (found != true) {
+        client.send({ error: "You're not authorized" });
+      }
+    } else {
+      console.log(client.userId);
+      var msg = { message: [client.sessionId, message] };
+      buffer.push(msg);
+      if (buffer.length > 15) buffer.shift();
+      client.broadcast(msg);
+    }
   });
 
   client.on('disconnect', function(){
     client.broadcast({ announcement: client.sessionId + ' disconnected' });
+    delete users[client.userId];
   });
 });
 
@@ -64,37 +90,49 @@ var net = require('net');
 var adminServer = net.createServer(function (adminSocket) {
 
     adminSocket.addListener('connect', function() {
-	    console.log("%s opened new admin connection", adminSocket.remoteAddress);
+	    sys.log(adminSocket.remoteAddress + " opened new admin connection");
 	    });
 
     adminSocket.addListener('close', function() {
-	    console.log("%s closed admin connection", adminSocket.remoteAddress);
+	    sys.log(adminSocket.remoteAddress + " closed admin connection");
 	    });
 
     adminSocket.addListener('data', function (data) {
-	    var cmd = data.toString().split(" ");
-	    var command = [cmd.shift(), cmd.shift(), cmd.join(' ')];
-	    console.log(command);
+	    try {
+		var input = JSON.parse(data.toString());
+	    } catch (err) {
+	    	adminSocket.write('{"error":"No well-formed json"}\n');
+	    }
 
-	    switch(command[0].trim().toUpperCase()) {
-	    	case "SEND":
-			sessionId = parseInt(command[1].trim());
-			message = command[2].trim();
-			var msg = { message: ['TCP', message] };
-			io.clients[sessionId].send(msg);
-			break;
-		case "LIST":
-			console.log(io.clients);
-			break;
-		case "QUIT":
-			adminSocket.end();
-			break;
+	    if (input != undefined) {
+		    switch(input.command) {
+			case "useradd":
+				userId = parseInt(input.userId);
+				users[userId] = { userId: userId, hash: Math.random().toString().substr(2) };
+				adminSocket.write(JSON.stringify(users[userId]) + "\r\n");
+				break;	
+			case "send":
+				userId = parseInt(input.userId);
+				message = input.message;
+				var msg = { message: ['TCP', message] };
+				io.clients[users[userId].sessionId].send(msg);
+				break;
+			case "listuser":
+				adminSocket.write(JSON.stringify(users) + "\n");
+				break;
+			case "quit":
+				adminSocket.end();
+				break;
+			default:
+				adminSocket.write('{"error":"Not Implemented"}\n');
+				break;
+		    }
 	    }
     });
 
 });
 
 adminServer.listen(8181, "127.0.0.1", function() {
-    address = server.address();
-    console.log("adminServer listening on %s:%s", address.address, address.port);
+    address = adminServer.address();
+    sys.log("adminServer listening on " + address.address + ":" + address.port);
 });
