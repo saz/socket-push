@@ -80,6 +80,7 @@ io.on('connection', function(client){
 
   client.on('disconnect', function(){
     client.broadcast({ announcement: client.sessionId + ' disconnected' });
+    sys.log("UserID " + client.userId + " disconnected");
     delete users[client.userId];
   });
 });
@@ -116,6 +117,14 @@ var adminServer = net.createServer(function (adminSocket) {
 				message = input.message;
 				var msg = { message: ['TCP', message] };
 				io.clients[users[userId].sessionId].send(msg);
+				break;
+			case "sendmulti":
+				message = input.message;
+				var msg = { message: ['TCP', message] };
+				for (u in input.users) {
+					userId = parseInt(input.users[u].userId);
+					io.clients[users[userId].sessionId].send(msg);
+				}
 				break;
 			case "listuser":
 				adminSocket.write(JSON.stringify(users) + "\n");
