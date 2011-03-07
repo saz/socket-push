@@ -58,10 +58,10 @@ io.on('connection', function(client){
         sys.log("No well-formed data from client " + client.sessionId + " received. Data: " + message);
       }
       var found = false;
-      for (u in users) {
-        if (users[u].hash == auth.hash && users[u].userId == auth.userId) {
-	  client.userId = users[u].userId;
-	  users[client.userId].sessionId = client.sessionId;
+      if (users[auth.userId] != undefined) {
+        if (users[auth.userId].hash == auth.hash && users[auth.userId].userId == auth.userId) {
+	  client.userId = auth.userId;
+	  users[auth.userId].sessionId = client.sessionId;
 	  sys.log("UserID " + client.userId + " is using session " + client.sessionId + "\n");
 	  found = true;
 	}
@@ -70,7 +70,6 @@ io.on('connection', function(client){
         client.send({ error: "You're not authorized" });
       }
     } else {
-      console.log(client.userId);
       var msg = { message: [client.sessionId, message] };
       buffer.push(msg);
       if (buffer.length > 15) buffer.shift();
@@ -80,7 +79,7 @@ io.on('connection', function(client){
 
   client.on('disconnect', function(){
     client.broadcast({ announcement: client.sessionId + ' disconnected' });
-    sys.log("UserID " + client.userId + " disconnected");
+    sys.log("UserID " + client.userId + "(SessionID: " + client.sessionId + " disconnected");
     delete users[client.userId];
   });
 });
