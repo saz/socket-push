@@ -51,17 +51,23 @@ io.on('connection', function(client){
 
   client.on('message', function(message){
     // Initial connect will set userid
-    if (client.userId == undefined) {
+    if (client.userId === undefined) {
       try {
         auth = JSON.parse(message);
       } catch (err) {
         sys.log("No well-formed data from client " + client.sessionId + " received. Data: " + message);
       }
       var found = false;
-      if (users[auth.userId] != undefined) {
+      if (users[auth.userId] !== undefined) {
         if (users[auth.userId].hash == auth.hash && users[auth.userId].userId == auth.userId) {
 	  client.userId = auth.userId;
-	  users[auth.userId].sessionId = client.sessionId;
+	  if (users[client.userId].sessions === undefined) {
+	  	sys.log("bla");
+		console.log(users[client.userId]);
+	  	users[client.userId].sessions = [];
+	  }
+	  users[client.userId].sessions[client.sessionId] = client.sessionId;
+	  console.log(users);
 	  sys.log("UserID " + client.userId + " is using session " + client.sessionId + "\n");
 	  found = true;
 	}
@@ -80,7 +86,21 @@ io.on('connection', function(client){
   client.on('disconnect', function(){
     client.broadcast({ announcement: client.sessionId + ' disconnected' });
     sys.log("UserID " + client.userId + "(SessionID: " + client.sessionId + " disconnected");
-    delete users[client.userId];
+    if (users[client.userId].sessions[client.sessionId] !== undefined) {
+	delete users[client.userId].sessions[client.sessionId];
+    }
+
+    Object.size = function(obj) {
+    	var size = 0, key;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) size++;
+	}
+	return size;
+    };
+
+    if (Object.size(users[client.userId].sessions) == 0) {
+	delete users[client.userId];
+    }
   });
 });
 
@@ -104,7 +124,7 @@ var adminServer = net.createServer(function (adminSocket) {
 	    	adminSocket.write('{"error":"No well-formed json"}\n');
 	    }
 
-	    if (input != undefined) {
+	    if (input !== undefined) {
 		    switch(input.command) {
 			case "useradd":
 				userId = parseInt(input.userId);
@@ -115,14 +135,18 @@ var adminServer = net.createServer(function (adminSocket) {
 				userId = parseInt(input.userId);
 				message = input.message;
 				var msg = { message: ['TCP', message] };
-				io.clients[users[userId].sessionId].send(msg);
+				for (s in users[userId].sessions) {
+					io.clients[s].send(msg);
+				}
 				break;
 			case "sendmulti":
 				message = input.message;
 				var msg = { message: ['TCP', message] };
 				for (u in input.users) {
 					userId = parseInt(input.users[u].userId);
-					io.clients[users[userId].sessionId].send(msg);
+					for (s in users[userId].sessions) {
+						io.clients[s].send(msg);
+					}
 				}
 				break;
 			case "listuser":
