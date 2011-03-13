@@ -9,99 +9,125 @@ var server = connect(
         connect.logger()
         );
 
-users.setDisconnectCallback(function () {
+var api = {};
 
-}, config.disconnectTimeOut);
-
-function respond(res, message) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(message);
-    res.end();
-}
-
-function respondError(res, message) {
-    if (typeof message != 'string') {
-        throw message;
-    }
-    res.writeHead(500, {'Content-Type': 'text/html'});
-    res.write(message);
-    res.end();
-}
-
-server.use(connect.router(function(app) {
-    app.get('/auth/set/:userid/:sessionid', function(req, res, next) {
-        auth.setAuth(req.params.userid, req.params.sessionid);
-        respond(res, req.params.sessionid);
-    });
-    app.get('/auth/delete/:userid', function(req, res, next) {
-        auth.deleteAuth(req.userid);
-        respond(res, "");
-    });
-    app.get('/user/publish/:userid/:message', function(req, res, next) {
-        try {
-            users.publish(req.params.userid, req.params.message);
-            respond(res, "");
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-    app.get('/user/remove/:useriId', function(req, res, next) {
-        try {
-            users.remove(req.params.userId);
-            respond(res, "");
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-    app.get('/channel/subscribe/:userId/:channelId', function(req, res, next) {
-        try {
-            channels.subscribe(req.params.userId, req.params.channelId, function (userId, message) {
-                users.publish(userId, message);
+function bind(service, methods) {
+    api[service] = methods;
+    server.use(connect.router(function(app) {
+        methods.forEach(function(item) {
+            app.get(item.route, function(req, res, next) {
+                try {
+                    var result = item.method(req.params);
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    if (result !== undefined) {
+                        res.write(JSON.stringify(result));
+                    }
+                    res.end();
+                }
+                catch (message) {
+                    if (typeof message != 'string') {
+                        throw message;
+                    }
+                    res.writeHead(500, {'Content-Type': 'text/html'});
+                    res.write(message);
+                    res.end();
+                }
             });
-            respond(res, "");
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-    app.get('/channel/unsubscribe/:userid/:channelId', function(req, res, next) {
-        try {
-            channels.unsubscribe(req.params.userId, req.params.channelId);
-            respond(res, "");
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-    app.get('/channel/getsubscriptions/:userId', function(req, res, next) {
-        try {
-            var s = channels.getSubscriptions(req.params.userId);
-            respond(res, JSON.stringify(s));
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-    app.get('/channel/getsubscribers/:channelId', function(req, res, next) {
-        try {
-            var s = channels.getSubscribers(req.params.channelId);
-            respond(res, JSON.stringify(s));
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-    app.get('/channel/publish/:channelId/:message', function(req, res, next) {
-        try {
-            channels.publish(req.params.channelId, req.params.message);
-            respond(res, "");
-        }
-        catch (e) {
-            respondError(res, e);
-        }
-    });
-}));
+        });
+    }));
+}
 
-exports.server = server;
+exports.bindAuthService = function(authService) {
+    bind('auth', [
+        {
+            route: '/auth/set/:userId/:sessionId',
+            description: 'Set Auth',
+            method: function(params) {
+                return authService.setAuth(params.userId, params.sessionId);
+            }
+        },
+        {
+            route: '/auth/delete/:userId',
+            description: 'Delete Auth',
+            method: function(params) {
+                return authService.deleteAuth(params.userId);
+            }
+        }
+    ]);
+}
+
+exports.bindUserService = function(userService) {
+    bind('user', [
+        {
+            route: '/user/publish/:userId/:message',
+            description: 'Publish a message to userid',
+            method: function(params) {
+                var message = JSON.parse(params.message);
+                return userService.publish(params.userId, message);
+            }
+        },
+        {
+            route: '/user/remove/:userId',
+            description: 'Remove user',
+            method: function(params) {
+                return userService.remove(params.userId);
+            }
+        }
+    ]);
+}
+
+exports.bindChannelService = function(channelService) {
+    bind('channel', [
+        {
+            route: '/channel/subscribe/:userId/:channelId',
+            description: 'Subscribe channel',
+            method: function(params) {
+                return channelService.subscribe(params.userId, params.channelId, function (userId, message) {
+                    users.publish(userId, message);
+                });
+            }
+        },
+        {
+            route: '/channel/unsubscribe/:userId/:channelId',
+            description: 'Unsubscribe channel',
+            method: function(params) {
+                return channelService.unsubscribe(params.userId, params.channelId);
+            }
+        },
+        {
+            route: '/channel/getsubscriptions/:userId',
+            description: 'Get subscriptions of user',
+            method: function(params) {
+                return channelService.getSubscriptions(params.userId);
+            }
+        },
+        {
+            route: '/channel/getsubscribers/:channelId',
+            description: 'Get subscriptions of user',
+            method: function(params) {
+                return channelService.getSubscribers(params.channelId);
+            }
+        },
+        {
+            route: '/channel/publish/:channelId/:message',
+            description: 'Publish a message to channel',
+            method: function(params) {
+                var message = JSON.parse(params.message);
+                return channelService.publish(params.channelId, message);
+            }
+        }
+    ]);
+}
+
+exports.start = function(port) {
+    bind('api', [
+        {
+            route: '/api',
+            description: 'Self exposing API',
+            method: function() {
+                return api;
+            }
+        }
+    ]);
+    server.listen(port);
+}

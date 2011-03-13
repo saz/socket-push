@@ -39,7 +39,8 @@ exports["test remove"] = function (test) {
         cbUserId = userId;
     }
 
-    users.setDisconnectCallback(testFunc, 1000);
+    users.onDisconnect(testFunc);
+    users.setDisconnectTimeout(1000);
 
     users.remove('user1');
 
@@ -93,7 +94,8 @@ exports["test disconnect callback"] = function (test) {
         }
     }
     users.setTimer(timer);
-    users.setDisconnectCallback(testFunc, 1000);
+    users.setDisconnectTimeout(1000);
+    users.onDisconnect(testFunc);
 
     users.addConnection('user14', 'session1');
 

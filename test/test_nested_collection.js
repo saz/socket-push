@@ -1,7 +1,7 @@
 var util = require('util');
 
 var c = require('nested_collection');
-var collection = new c.instance();
+var collection = new c();
 
 exports["test addSub, get"] = function (test) {
     var sub;
@@ -46,7 +46,7 @@ exports["test removeSub"] = function (test) {
 }
 
 exports["test inject"] = function (test) {
-    var c2 = new c.instance({'foo': {'bar' : function() {
+    var c2 = new c({'foo': {'bar' : function() {
     }}});
 
     test.ok(c2.hasSub('foo', 'bar'));
