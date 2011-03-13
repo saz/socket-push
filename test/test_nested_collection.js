@@ -4,48 +4,51 @@ var c = require('nested_collection');
 var collection = new c.instance();
 
 exports["test addSub, get"] = function (test) {
-	var sub;
+    var sub;
 
-	test.ok(!collection.has('foo'));
+    test.ok(!collection.has('foo'));
 
-	test.done();
+    test.done();
 }
 
 exports["test addSub, get"] = function (test) {
-	var sub;
+    var sub;
 
-	var testFunc = function() {return false;};
+    var testFunc = function() {
+        return false;
+    };
 
-	collection.addSub('foo', 'bar1', testFunc);
-	test.ok(collection.has('foo'));
+    collection.addSub('foo', 'bar1', testFunc);
+    test.ok(collection.has('foo'));
 
-	sub = collection.get('foo');
-	test.equals(1, Object.keys(sub).length);
-	test.same(testFunc, sub.bar1);
+    sub = collection.get('foo');
+    test.equals(1, Object.keys(sub).length);
+    test.same(testFunc, sub.bar1);
 
-	test.done();
+    test.done();
 }
 
 exports["test hasSub"] = function (test) {
-	test.ok(!collection.hasSub('foo', 'bar2'));
-	test.ok(collection.hasSub('foo', 'bar1'));
+    test.ok(!collection.hasSub('foo', 'bar2'));
+    test.ok(collection.hasSub('foo', 'bar1'));
 
-	test.done();
+    test.done();
 }
 
 exports["test removeSub"] = function (test) {
-	var sub;
+    var sub;
 
-	collection.removeSub('foo', 'bar1');
-	sub = collection.get('foo');
-	test.equals(0, Object.keys(sub).length);
+    collection.removeSub('foo', 'bar1');
+    sub = collection.get('foo');
+    test.equals(0, Object.keys(sub).length);
 
-	test.done();
+    test.done();
 }
 
 exports["test inject"] = function (test) {
-	var c2 = new c.instance({'foo': {'bar' : function() {}}});
+    var c2 = new c.instance({'foo': {'bar' : function() {
+    }}});
 
-	test.ok(c2.hasSub('foo', 'bar'));
-	test.done();
+    test.ok(c2.hasSub('foo', 'bar'));
+    test.done();
 }

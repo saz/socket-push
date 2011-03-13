@@ -3,7 +3,7 @@
   <head>
     <title>socket.io client test</title>
         
-    <script src="/json.js"></script> <!-- for ie -->
+    <script src="/public/json.js"></script> <!-- for ie -->
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
@@ -31,7 +31,7 @@
       var socket = new io.Socket(null, {port: 8080, rememberTransport: false});
       socket.connect();
       socket.on('connect', function(obj){
-	      socket.send('{"userId":"1","hash":"507909951498732"}');
+	      socket.send(54321);
       });
       socket.on('message', function(obj){
         if ('buffer' in obj){
