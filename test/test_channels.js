@@ -34,6 +34,7 @@ exports["test getsubscriptions"] = function (test) {
 }
 
 exports["test publish"] = function (test) {
+    channels.onPublish(testFunc);
     channels.publish('channelId1', 'messi');
     test.deepEqual(['subscriberId1;messi', 'subscriberId2;messi'], executed);
 

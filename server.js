@@ -11,12 +11,14 @@ var util = require('util'),
 
 // Add event listener to unsubscribe disconnected user from all groups
 users.onDisconnect(channels.unsubscribeAll);
+// Add event listener for group publish
+channels.onPublish(users.publish);
 
 // Create admin port
 var adminServer = require('admin');
 adminServer.bindAuthService(auth);
 adminServer.bindUserService(users);
-adminServer.bindChannelService(channels);
+adminServer.bindChannelService(channels, users);
 adminServer.start(config.adminPort);
 sys.log("AdminServer listening on " + config.adminPort);
 

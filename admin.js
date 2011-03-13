@@ -62,8 +62,7 @@ exports.bindUserService = function(userService) {
             route: '/user/publish/:userId/:message',
             description: 'Publish a message to userid',
             method: function(params) {
-                var message = JSON.parse(params.message);
-                return userService.publish(params.userId, message);
+                return userService.publish(params.userId, JSON.parse(params.message));
             }
         },
         {
@@ -82,9 +81,7 @@ exports.bindChannelService = function(channelService) {
             route: '/channel/subscribe/:userId/:channelId',
             description: 'Subscribe channel',
             method: function(params) {
-                return channelService.subscribe(params.userId, params.channelId, function (userId, message) {
-                    users.publish(userId, message);
-                });
+                return channelService.subscribe(params.userId, params.channelId);
             }
         },
         {
@@ -112,8 +109,7 @@ exports.bindChannelService = function(channelService) {
             route: '/channel/publish/:channelId/:message',
             description: 'Publish a message to channel',
             method: function(params) {
-                var message = JSON.parse(params.message);
-                return channelService.publish(params.channelId, message);
+                return channelService.publish(params.channelId, JSON.parse(params.message));
             }
         }
     ]);
