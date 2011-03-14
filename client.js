@@ -36,6 +36,7 @@ io.on('connection', function(client) {
             }
 
             client.userId = userId;
+
             users.addConnection(userId, client.sessionId, client);
             sys.log("User " + userId + " connected");
             client.send({ auth: "Authorized as " + userId });
