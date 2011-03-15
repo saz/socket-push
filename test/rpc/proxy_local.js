@@ -1,9 +1,9 @@
 var util = require('util');
 var localProxy = require('rpc/proxy/local');
 
-var fixture = require('fixture/rpc');
+var fixture = require('test/fixtures/rpc');
 
-exports["test call"] = function (test) {
+exports["call"] = function (test) {
 
     var testService = new localProxy(fixture.serviceDesc, fixture.proxiedObject);
     var myResult;

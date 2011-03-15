@@ -6,7 +6,7 @@ var testFunc = function (subscriberId, message) {
     executed.push(subscriberId + ";" + message);
 };
 
-exports["test subscribe"] = function (test) {
+exports["subscribe"] = function (test) {
     channel.subscribe('subscriberId1', 'channelId1', testFunc);
     channel.subscribe('subscriberId1', 'channelId2', testFunc);
     channel.subscribe('subscriberId1', 'channelId3', testFunc);
@@ -21,7 +21,7 @@ exports["test subscribe"] = function (test) {
     test.done();
 }
 
-exports["test getsubscribers"] = function (test) {
+exports["getsubscribers"] = function (test) {
     test.deepEqual(['channelId1', 'channelId2', 'channelId3'], channel.getSubscriptions('subscriberId1'));
 
     test.done();
@@ -33,7 +33,7 @@ exports["test getsubscriptions"] = function (test) {
     test.done();
 }
 
-exports["test publish"] = function (test) {
+exports["publish"] = function (test) {
     channel.onPublish(testFunc);
     channel.publish('channelId1', 'messi');
     test.deepEqual(['subscriberId1;messi', 'subscriberId2;messi'], executed);
@@ -41,7 +41,7 @@ exports["test publish"] = function (test) {
     test.done();
 }
 
-exports["test unsubscribe"] = function (test) {
+exports["unsubscribe"] = function (test) {
     channel.unsubscribe('subscriberId1', 'channelId4');
     channel.unsubscribe('subscriberId1', 'channelId2');
 
@@ -50,7 +50,7 @@ exports["test unsubscribe"] = function (test) {
     test.done();
 }
 
-exports["test unsubscribe all"] = function (test) {
+exports["unsubscribe all"] = function (test) {
     channel.unsubscribeAll('subscriberId1');
 
     test.ok(!channel.isSubscribed('subscriberId1', 'channelId1'));

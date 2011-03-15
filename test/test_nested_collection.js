@@ -3,7 +3,7 @@ var util = require('util');
 var c = require('nested_collection');
 var collection = new c();
 
-exports["test addSub, get"] = function (test) {
+exports["addSub, get"] = function (test) {
     var sub;
 
     test.ok(!collection.has('foo'));
@@ -11,7 +11,7 @@ exports["test addSub, get"] = function (test) {
     test.done();
 }
 
-exports["test addSub, get"] = function (test) {
+exports["addSub, get"] = function (test) {
     var sub;
 
     var testFunc = function() {
@@ -28,14 +28,14 @@ exports["test addSub, get"] = function (test) {
     test.done();
 }
 
-exports["test hasSub"] = function (test) {
+exports["hasSub"] = function (test) {
     test.ok(!collection.hasSub('foo', 'bar2'));
     test.ok(collection.hasSub('foo', 'bar1'));
 
     test.done();
 }
 
-exports["test removeSub"] = function (test) {
+exports["removeSub"] = function (test) {
     var sub;
 
     collection.removeSub('foo', 'bar1');
@@ -45,7 +45,7 @@ exports["test removeSub"] = function (test) {
     test.done();
 }
 
-exports["test inject"] = function (test) {
+exports["inject"] = function (test) {
     var c2 = new c({'foo': {'bar' : function() {
     }}});
 

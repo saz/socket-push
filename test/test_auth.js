@@ -1,6 +1,6 @@
 var util = require('util');
 
-exports["test correct auth"] = function (test) {
+exports["correct auth"] = function (test) {
     var auth = require('auth');
 
     auth.set('userid', 'auth');
@@ -10,7 +10,7 @@ exports["test correct auth"] = function (test) {
     test.done();
 }
 
-exports["test failed auth"] = function (test) {
+exports["failed auth"] = function (test) {
     var auth = require('auth');
 
     test.throws(function() {
@@ -22,7 +22,7 @@ exports["test failed auth"] = function (test) {
     test.done();
 }
 
-exports["test delete auth"] = function (test) {
+exports["delete auth"] = function (test) {
     var auth = require('auth');
 
     auth.remove('falseuserid');
@@ -36,7 +36,7 @@ exports["test delete auth"] = function (test) {
     test.done();
 }
 
-exports["test reset"] = function (test) {
+exports["reset"] = function (test) {
     var auth = require('auth');
 
     auth.set('userid', 'auth');

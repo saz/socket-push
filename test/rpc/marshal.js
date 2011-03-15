@@ -2,7 +2,7 @@ var util = require('util');
 
 var marshal = require('rpc/marshal');
 
-exports["test fromHttpValue"] = function (test) {
+exports["fromHttpValue"] = function (test) {
     test.equal(3, marshal.fromHttpValue('3', 'number'));
     test.equal('3', marshal.fromHttpValue('3', 'string'));
 
@@ -26,7 +26,7 @@ exports["test fromHttpValue"] = function (test) {
     test.done();
 }
 
-exports["test fromHttpParams"] = function (test) {
+exports["fromHttpParams"] = function (test) {
     test.deepEqual(
         ['asd', 123],
         marshal.fromHttpParams(
@@ -38,7 +38,7 @@ exports["test fromHttpParams"] = function (test) {
     test.done();
 }
 
-exports["test toHttpValue"] = function (test) {
+exports["toHttpValue"] = function (test) {
     test.equal(3, marshal.toHttpValue(3, 'number'));
     test.equal('3', marshal.toHttpValue('3', 'string'));
 
@@ -58,7 +58,7 @@ exports["test toHttpValue"] = function (test) {
     test.done();
 }
 
-exports["test toHttpParams"] = function (test) {
+exports["toHttpParams"] = function (test) {
     test.deepEqual(
         {param1: '123', param2: 'asd'},
         marshal.toHttpParams(

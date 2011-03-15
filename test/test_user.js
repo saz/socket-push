@@ -10,7 +10,7 @@ var socket = {
     }
 };
 
-exports["test addConnection"] = function (test) {
+exports["addConnection"] = function (test) {
     user.addConnection('user1', 'sessionId1', socket);
 
     var c = user.getConnections('user1');
@@ -21,7 +21,7 @@ exports["test addConnection"] = function (test) {
     test.done();
 }
 
-exports["test removeConnection"] = function (test) {
+exports["removeConnection"] = function (test) {
     user.removeConnection('user1', 'sessionId1');
 
     var c = user.getConnections('user1');
@@ -31,7 +31,7 @@ exports["test removeConnection"] = function (test) {
     test.done();
 }
 
-exports["test remove"] = function (test) {
+exports["remove"] = function (test) {
     user.addConnection('user1', 'sessionId1', socket);
 
     var cbUserId;
@@ -52,7 +52,7 @@ exports["test remove"] = function (test) {
     test.done();
 }
 
-exports["test publish"] = function (test) {
+exports["publish"] = function (test) {
     user.addConnection('user1', 'sessionId1', socket);
     user.addConnection('user1', 'sessionId2', socket);
     user.publish('user1', 'message');
@@ -61,7 +61,7 @@ exports["test publish"] = function (test) {
     test.done();
 }
 
-exports["test publish without message"] = function (test) {
+exports["publish without message"] = function (test) {
     test.throws(function () {
         user.publish('user1');
     });
@@ -69,7 +69,7 @@ exports["test publish without message"] = function (test) {
     test.done();
 }
 
-exports["test publish on not connected user"] = function (test) {
+exports["publish on not connected user"] = function (test) {
     test.throws(function () {
         user.publish('user2');
     });
@@ -77,7 +77,7 @@ exports["test publish on not connected user"] = function (test) {
     test.done();
 }
 
-exports["test disconnect callback"] = function (test) {
+exports["disconnect callback"] = function (test) {
     var cbUserId, cbTime, cbTimerId;
     var testFunc = function (userId) {
         cbUserId = userId;
