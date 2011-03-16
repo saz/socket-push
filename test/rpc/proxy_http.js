@@ -10,13 +10,8 @@ exports["route"] = function (test) {
 }
 
 exports["remote call"] = function (test) {
-    try {
-        proxyObject.foo('arg1', 'arg2', function(result) {
-            test.deepEqual(['arg1', 'arg2'], result);
-            test.done();
-        });
-    }
-    catch (e) {
-        test.fail(e);
-    }
+    proxyObject.foo('arg1', 'arg2', function(result) {
+        test.deepEqual(['arg1', 'arg2'], result);
+        test.done();
+    });
 }

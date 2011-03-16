@@ -13,8 +13,11 @@ exports["call"] = function (test) {
     });
 
     test.deepEqual(['arg1', 'arg2'], myResult);
-    test.throws(function() {
-        testService.foo('args1');
+
+    testService.foo('arg1', undefined, function() {
+        test.ok(false, "Return callback called, should have called error Callback");
+    }, function (error) {
+        test.ok(true);
     });
     test.throws(function() {
         testService.bla();
