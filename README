@@ -1,0 +1,11 @@
+TODO:
+
+- Config Examples
+- Distributed server implementations
+ - client node
+ - group node
+ - manager node
+- RPC Proxy Builder for PHP
+- Client
+ - Auth Timeout
+ - GC Collector to delete Users without connections
