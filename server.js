@@ -1,5 +1,4 @@
-var path = require('path');
-var base = path.dirname(__dirname);
+var base = __dirname;
 require.paths.push(base);
 require.paths.push(base + '/lib');
 require.paths.push(base + '/rpc/lib');

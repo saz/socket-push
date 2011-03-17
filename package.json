@@ -1,0 +1,35 @@
+{ "name" : "socket-push"
+, "description" : "A highly scaleable COMET solution"
+, "keywords" : [ "socket-push", "comet", "websockets" ]
+, "version" : "0.1"
+, "homepage" : "http://www.kwick.de/"
+, "author" : "Benjamin Roth <benjamin.roth@kwick.de> (http://www.kwick.de)"
+, "contributors" :
+  [ "Steffen Zieger <steffen.zieger@kwick.de> (http://www.kwick.de)"
+  ]
+, "repository" :
+  { "type" : "git"
+  , "url" : "git://github.com/brstgt/socket-push"
+  }
+, "bugs" :
+  { "mail" : "benjamin.roth@kwick.de"
+  , "web" : "http://github.com/brstgt/socket-push/issues"
+  }
+, "directories" : { "config" : "./config"
+                  , "lib" : "./lib"
+                  , "public" : "./public"
+                  , "rpc" : "./rpc"
+                  , "test" : "./test"
+                  }
+, "main" : "socket-push"
+, "dependencies" : { "socket.io" : "1" , "connect": "1"}
+, "devDependencies" : { }
+, "engines" : { "node" : "0.4 || 0.5" }
+, "scripts" : { "test" : "./runTests"
+              }
+, "licenses" :
+  [ { "type" : "GPLv2"
+    , "url" : "https://github.com/brstgt/socket-push/raw/master/LICENSE"
+    }
+  ]
+}
