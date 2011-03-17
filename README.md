@@ -48,6 +48,12 @@ In node.js it looks like this:
 
 In PHP it looks like this:
 
+First generate Service class
+
+   rpc/bindings/php> generateApi.php -h 127.0.0.1 -p 8181
+
+Then
+
     $authService = new NodeRPC_Auth_Service('127.0.0.1', 8181);
     $authService->set(1, 'test');
 
@@ -59,9 +65,9 @@ TODO
 * Config Examples
 * ConfigManager
 ** Master
- Accepts config changes via API and informs slaves
- Checks health states of nodes and drops in standby nodes if available
+Accepts config changes via API and informs slaves
+Checks health states of nodes and drops in standby nodes if available
 ** Slave
- Can reload config on the fly without restarting via API
- Local services are preserved if reused
+Can reload config on the fly without restarting via API
+Local services are preserved if reused
 * API call to retrieve frontend server for a user
