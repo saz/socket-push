@@ -3,7 +3,7 @@ var connect = require('connect'),
 
 var server = connect(
     connect.logger(),
-    connect.static(__dirname + '/../../public_admin')
+    connect.static(__dirname + '/../../public')
 );
 
 var api = {};
@@ -27,15 +27,28 @@ exports.bindService = function(definition, bindObject) {
                         // Marshall request arguements
                         var args = rpcMarshal.fromHttpParams(req.params, paramDef);
 
+                        // Append success callback
+                        args.push(function(result) {
+                            res.writeHead(200, {'Content-Type': 'text/html'});
+                            if (result !== undefined) {
+                                res.write(JSON.stringify(result));
+                            }
+                            res.end();
+                        });
+                        // Append error callback
+                        args.push(function(error) {
+                            if (typeof error != 'string') {
+                                throw error;
+                            }
+                            res.writeHead(500, {'Content-Type': 'text/html'});
+                            res.write(error);
+                            res.end();
+                        });
+
                         // Call native object method
                         // bindObject = thisContext
                         // bindObject[name] = native method
-                        var result = bindObject[name].apply(bindObject, args);
-                        res.writeHead(200, {'Content-Type': 'text/html'});
-                        if (result !== undefined) {
-                            res.write(JSON.stringify(result));
-                        }
-                        res.end();
+                        bindObject[name].apply(bindObject, args);
                     }
                     catch (message) {
                         if (typeof message != 'string') {
@@ -51,7 +64,7 @@ exports.bindService = function(definition, bindObject) {
     }));    
 }
 
-exports.start = function(port) {
+exports.start = function(port, hostname) {
     server.use(connect.router(function(app) {
        app.get('/api', function(req, res, next) {
            res.writeHead(200, {'Content-Type': 'text/html'});
@@ -59,5 +72,5 @@ exports.start = function(port) {
            res.end();
        });
     }));
-    server.listen(port);
+    server.listen(port, hostname);
 }

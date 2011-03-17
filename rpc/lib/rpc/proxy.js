@@ -7,7 +7,7 @@ var Proxy = function(service) {
     var self = this;
     Object.keys(service.methods).forEach(function (method) {
         self[method] = function() {
-            this.proxyCall(method, arguments);
+            self.proxyCall(method, arguments);
         }
     });
 }

@@ -26,6 +26,10 @@
         $('#connectForm').show();
         $('#response').html("<p>Please authenticate</p>");
     });
+    socket.on('disconnect', function(obj) {
+        $('#connectForm').hide();
+        $('#response').html("<p>Disconnected</p>");
+    });
     socket.on('message', function(obj) {
         if (obj.auth !== undefined) {
             $('#connectForm').hide();

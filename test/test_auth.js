@@ -5,7 +5,7 @@ exports["correct auth"] = function (test) {
 
     auth.set('userid', 'auth');
 
-    test.equals('userid', auth.authenticate('auth'));
+    test.equals('userid', auth.check('auth'));
 
     test.done();
 }
@@ -17,7 +17,7 @@ exports["failed auth"] = function (test) {
         auth.authenticate('failauth');
     });
 
-    test.equals('userid', auth.authenticate('auth'));
+    test.equals('userid', auth.check('auth'));
 
     test.done();
 }
@@ -26,7 +26,7 @@ exports["delete auth"] = function (test) {
     var auth = require('auth');
 
     auth.remove('falseuserid');
-    test.equals('userid', auth.authenticate('auth'));
+    test.equals('userid', auth.check('auth'));
 
     auth.remove('userid');
     test.throws(function() {
@@ -43,7 +43,7 @@ exports["reset"] = function (test) {
     auth.reset();
 
     test.throws(function() {
-        auth.authenticate('auth');
+        auth.check('auth');
     });
 
     test.done();
