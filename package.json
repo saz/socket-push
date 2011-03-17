@@ -1,7 +1,7 @@
 { "name" : "socket-push"
 , "description" : "A highly scaleable COMET solution"
 , "keywords" : [ "socket-push", "comet", "websockets" ]
-, "version" : "0.1"
+, "version" : "0.1.0beta"
 , "homepage" : "http://www.kwick.de/"
 , "author" : "Benjamin Roth <benjamin.roth@kwick.de> (http://www.kwick.de)"
 , "contributors" :
@@ -15,6 +15,9 @@
   { "mail" : "benjamin.roth@kwick.de"
   , "web" : "http://github.com/brstgt/socket-push/issues"
   }
+, "bin" : {
+    "socket-push" : "./server.js"
+}
 , "directories" : { "config" : "./config"
                   , "lib" : "./lib"
                   , "public" : "./public"
