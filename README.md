@@ -10,6 +10,11 @@ It offers services for
 
 Each service is fully shardeable via noderpc. This means, there can be several independant nodes for handling user connections, channel management and auth service and even completely independant and fault tolerant management nodes that maybe fully loadbalanced.
 
+Install
+-------
+
+    npm install socket-push
+
 Demo
 ----
 
