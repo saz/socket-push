@@ -1,5 +1,3 @@
-#!/usr/bin/node
-
 var base = __dirname;
 require.paths.push(base);
 require.paths.push(base + '/lib');
