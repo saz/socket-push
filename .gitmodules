@@ -1,10 +1,9 @@
 [submodule "lib/socket.io"]
 	path = lib/socket.io
 	url = git://github.com/LearnBoost/Socket.IO-node.git
-
-[submodule "connect"]
-	path = connect
+[submodule "lib/connect"]
+	path = lib/connect
 	url = git://github.com/senchalabs/connect.git
-[submodule "daemon.node"]
-	path = daemon.node
+[submodule "lib/daemon"]
+	path = lib/daemon
 	url = git://github.com/Slashed/daemon.node.git
