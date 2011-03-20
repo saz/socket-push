@@ -39,6 +39,7 @@ HttpProxy.prototype.proxyCall = function(method, args) {
     };
 
     // Execute http request
+    var that = this;
     this.httpClient.get(options,
             function(res) {
                 var data = '';
@@ -54,7 +55,7 @@ HttpProxy.prototype.proxyCall = function(method, args) {
                     }
                 });
             }).on('error', function(e) {
-                this.emit('error', e, this);
+                that.emit('error', e, this);
             });
 }
 

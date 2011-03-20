@@ -1,5 +1,5 @@
 var util = require('util');
-var user = require('user');
+var user = require('service/user');
 
 var executed = [];
 
