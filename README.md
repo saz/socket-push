@@ -67,12 +67,11 @@ The API, literally speaking naming of services, methods and parameters is consis
 TODO
 ----
 
-* Config Examples
-* ConfigManager
-** Master
-Accepts config changes via API and informs slaves
-Checks health states of nodes and drops in standby nodes if available
-** Slave
-Can reload config on the fly without restarting via API
-Local services are preserved if reused
-* API call to retrieve frontend server for a user
+* worker.heartbeat method
+* Distributed ConfigManager
+** generate config for nodes
+** watch workers
+** distribute config to workers
+** elect spare workers on node down
+* unit test for config managers
+* factory methods for rpc proxies
