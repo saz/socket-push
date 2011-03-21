@@ -1,5 +1,5 @@
 var util = require('util');
-var channel = require('service/channel');
+var channel = require('service/channel')();
 
 var executed = [];
 var testFunc = function (subscriberId, message) {

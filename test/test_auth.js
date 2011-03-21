@@ -1,5 +1,5 @@
 var util = require('util');
-var auth = require('service/auth');
+var auth = require('service/auth')();
 
 exports["correct auth"] = function (test) {
     auth.set('userid', 'auth');

@@ -1,7 +1,7 @@
 var util = require('util');
 
 var c = require('nested_collection');
-var collection = new c();
+var collection = c();
 
 exports["addSub, get"] = function (test) {
     var sub;

@@ -49,7 +49,13 @@ function createProxy(serviceName, serviceDefinition, serviceConfig) {
             if (serviceConfig.implementation !== undefined) {
                 implementation = serviceConfig.implementation;
             }
-            localServices[serviceName] = require("service/" + serviceName);
+
+            /**
+             * Reuse local services, don't kill data
+             */
+            if (localServices[serviceName] === undefined) {
+                localServices[serviceName] = require("service/" + implementation)();
+            }
             return new (require('rpc/proxy/local'))(serviceDefinition, localServices[serviceName]);
         default:
             throw "Unknown service location '" + serviceConfig.location + "' in service '" + serviceName + "'";
@@ -68,24 +74,3 @@ exports.createProxy = function(serviceName, serviceConfig) {
     proxyServices[serviceName] = createProxy(serviceName, serviceDefinition, serviceConfig);
     return proxyServices[serviceName];
 }
-
-/**
- * creates proxy services from config, binds them
- * and registers them for .getService + .removeService
- *
- * @param binding
- * @param servicesConfig
- */
-exports.buildFromConfig = function(binding, servicesConfig) {
-    for (var serviceName in servicesConfig) {
-        sys.log("Loading service " + serviceName);
-        var serviceDefinition = require('service/' + serviceName + "_description");
-        proxyServices[serviceName] = createProxy(serviceName, serviceDefinition, servicesConfig[serviceName]);
-        binding.bindService(
-            serviceDefinition,
-            proxyServices[serviceName]
-        );
-    }
-
-}
-

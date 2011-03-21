@@ -8,21 +8,18 @@ var config = require('config/manager'),
     options = require('options'),
     services = {},
     servicefactory = require('rpc/servicefactory'),
-    managerPort = require('rpc/binding/http')
+    managerPort = require('rpc/binding/http')()
     ;
 
 /**
  * Create admin port
  */
 
-var serviceConfig = {
-    'manager': {
-        location: 'local'
-    }
-};
-
-servicefactory.buildFromConfig(managerPort, serviceConfig);
-servicefactory.getProxy('manager').setConfig(require('config/worker'));
-
+var proxy = servicefactory.createProxy('manager', {
+    location: 'local',
+    implementation: 'manager/distributed'
+});
+proxy.setConfig(require('config/worker'));
+managerPort.bindService(proxy);
 managerPort.start(config.managerPort.port, config.managerPort.hostname);
 sys.log("managerPort listening on " + config.managerPort.hostname + ":" + config.managerPort.port);
