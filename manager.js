@@ -11,6 +11,9 @@ var config = require('config/manager'),
     managerPort = require('rpc/binding/http')()
     ;
 
+// set process title - doesn't work in all OS
+process.title = 'socket-push-manager';
+
 /**
  * Create admin port
  */

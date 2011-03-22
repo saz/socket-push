@@ -57,6 +57,7 @@ try {
          * Start standalone node
          */
         if (initStatus == 0) {
+            nodeId = 'standalone';
             sys.log("Load local config");
             var configManager = servicefactory.createProxy('manager', {
                 location: 'local',
@@ -64,6 +65,9 @@ try {
             });
             configManager.setConfig(require('config/worker'));
         }
+
+        // set process title - doesn't work in all OS
+        process.title = 'socket-push-' + nodeId;
 
         worker = require('service/worker')(nodeId, servicefactory, configManager);
         worker.loadConfig();
