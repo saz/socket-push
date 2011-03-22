@@ -7,30 +7,30 @@ $phpDefinition = trim($phpDefinition);
 ?>
 class NodeRPC_Service_<?= ucfirst($serviceName) ?> extends NodeRPC_Service_Abstract {
 
-	public function init() {
-		$this->serviceName = '<?= $serviceName ?>';
-		$this->serviceDefinition = <?= $phpDefinition ?>;
-	}
+    public function init() {
+        $this->serviceName = '<?= $serviceName ?>';
+        $this->serviceDefinition = <?= $phpDefinition ?>;
+    }
 <? foreach ($methods as $method => $definition) {
-	$paramlist = array();
-	foreach ($definition['params'] as $param) {
-		$paramlist[] = '$'.$param['name'];
-	}
-	?>
+    $paramlist = array();
+    foreach ($definition['params'] as $param) {
+        $paramlist[] = '$'.$param['name'];
+    }
+    ?>
 
 
-	/**
-	 * <?= $definition['description'] ?>
+    /**
+     * <?= $definition['description'] ?>
 
  <?
-	foreach ($definition['params'] as $param) { ?>
-	 * @param <?=$param['type'] ?> $<?=$param['name'] ?>
+    foreach ($definition['params'] as $param) { ?>
+     * @param <?=$param['type'] ?> $<?=$param['name'] ?>
 
- <?	}
+ <?    }
 ?>
-	 */
-	public function <?= $method ?>(<?= implode(', ', $paramlist); ?>) {
-		return $this->proxyCall('<?= $method ?>', func_get_args());
-	}
+     */
+    public function <?= $method ?>(<?= implode(', ', $paramlist); ?>) {
+        return $this->proxyCall('<?= $method ?>', func_get_args());
+    }
 <? } ?>
 }
