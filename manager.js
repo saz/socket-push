@@ -9,6 +9,7 @@ var config = require('config/manager'),
     sys = require(process.binding('natives').util ? 'util' : 'sys'),
     managerPort = require('rpc/binding/http')(),
     daemonize = require('daemonizer');
+    ;
 
 /**
  * Handle daemon start/stop
