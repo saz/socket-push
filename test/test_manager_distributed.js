@@ -7,7 +7,6 @@ exports["setConfig undefined node"] = function (test) {
         mgr.setConfig({
             nodes: {
                  'node1': {
-                     pidFile: 'socket-node1.pid',
                      clientPort: {hostname: '127.0.0.1', port: 8080},
                      adminPort: {hostname: '127.0.0.1', port: 8181}
                  }
@@ -38,7 +37,6 @@ exports["setConfig missing service"] = function (test) {
         mgr.setConfig({
             nodes: {
                 'node1': {
-                    pidFile: 'socket-node1.pid',
                     clientPort: {hostname: '127.0.0.1', port: 8080},
                     adminPort: {hostname: '127.0.0.1', port: 8181}
                 }
@@ -62,7 +60,6 @@ exports["getConfig"] = function (test) {
     mgr.setConfig(fixture);
 
     test.deepEqual({
-        pidFile: 'socket-node1.pid',
         clientPort: {hostname: '127.0.0.1', port: 8080},
         adminPort: {hostname: '127.0.0.1', port: 8181},
         options: {
