@@ -54,4 +54,4 @@ Proxy.prototype.proxyCall = function(method, args, callback) {
     throw "Not implemented";
 }
 
-module.exports = Proxy;
+module.exports.Abstract = Proxy;

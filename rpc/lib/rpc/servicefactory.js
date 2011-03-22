@@ -34,14 +34,14 @@ function createProxy(serviceName, serviceDefinition, serviceConfig) {
                 throw "Missing 'shards' in sharded service '" + serviceName + "'";
             }
 
-            var shardProxy = new require('rpc/proxy/shard')(serviceDefinition, serviceConfig.shardBy);
+            var shardProxy = require('rpc/proxy/shard')(serviceDefinition, serviceConfig.shardBy);
             serviceConfig.shards.forEach(function (shardDef) {
                 shardProxy.addShard(createProxy(serviceName, serviceDefinition, shardDef));
             });
             return shardProxy;
         // Remote service
         case 'remote':
-            return new (require('rpc/proxy/http'))(serviceDefinition, serviceConfig.host, serviceConfig.port);
+            return require('rpc/proxy/http')(serviceDefinition, serviceConfig.hostname, serviceConfig.port);
         // Local service
         case 'local':
             // Set custom implementation by config
@@ -56,7 +56,7 @@ function createProxy(serviceName, serviceDefinition, serviceConfig) {
             if (localServices[serviceName] === undefined) {
                 localServices[serviceName] = require("service/" + implementation)();
             }
-            return new (require('rpc/proxy/local'))(serviceDefinition, localServices[serviceName]);
+            return require('rpc/proxy/local')(serviceDefinition, localServices[serviceName]);
         default:
             throw "Unknown service location '" + serviceConfig.location + "' in service '" + serviceName + "'";
     }

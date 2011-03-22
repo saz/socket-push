@@ -1,4 +1,4 @@
-var Proxy = require('rpc/proxy');
+var Proxy = require('rpc/proxy').Abstract;
 var util = require('util');
 
 function ShardedProxy(service, shardByParam) {
@@ -73,6 +73,7 @@ ShardedProxy.prototype.proxyCall = function(method, args) {
             }
 
             shardObject = this.shards[shardId];
+            //util.log("Shard '" + method + "' to " + util.inspect(shardObject));
             shardObject[method].apply(shardObject, args);
             return;
         }
@@ -81,4 +82,6 @@ ShardedProxy.prototype.proxyCall = function(method, args) {
     throw "RPC Service '" + this.serviceDefinition.name + "': Method " + method + " is not shardable by Param " + this.shardByParam;
 }
 
-module.exports = ShardedProxy;
+module.exports = function(service, shardByParam) {
+    return new ShardedProxy(service, shardByParam);
+}

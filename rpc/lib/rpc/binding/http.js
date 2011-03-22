@@ -4,7 +4,7 @@ function HttpBinding() {
         rpcMarshal = require('rpc/marshal');
 
     var server = connect(
-        connect.logger(),
+//        connect.logger(),
         connect.static(__dirname + '/../../../public')
     );
 
@@ -69,11 +69,16 @@ function HttpBinding() {
 
     this.start = function(port, hostname) {
         server.use(connect.router(function(app) {
-           app.get('/api', function(req, res, next) {
-               res.writeHead(200, {'Content-Type': 'text/html'});
-               res.write(JSON.stringify(api));
-               res.end();
-           });
+            app.get('/api', function(req, res, next) {
+                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.write(JSON.stringify(api));
+                res.end();
+            });
+            app.get('/heartbeat', function(req, res, next) {
+                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.write("OK");
+                // Don't end request
+            });
         }));
         server.listen(port, hostname);
     }

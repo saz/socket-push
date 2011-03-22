@@ -29,7 +29,7 @@ try {
                 case 'worker':
                     initStatus = 1;
                     options.getOption('--node', undefined, function(err, value) {
-                        nodeId = parseInt(value);
+                        nodeId = value;
                     });
                     options.getOption('--manager', undefined, function(err, value) {
                         manager = value;

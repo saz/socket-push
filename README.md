@@ -68,10 +68,5 @@ TODO
 ----
 
 * worker.heartbeat method
-* Distributed ConfigManager
-** generate config for nodes
-** watch workers
-** distribute config to workers
 ** elect spare workers on node down
-* unit test for config managers
-* factory methods for rpc proxies
+* proper logging

@@ -1,4 +1,4 @@
-var Proxy = require('rpc/proxy');
+var Proxy = require('rpc/proxy').Abstract;
 var rpcMarshal = require('rpc/marshal');
 var util = require('util');
 
@@ -51,7 +51,13 @@ HttpProxy.prototype.proxyCall = function(method, args) {
                         argsCollection.errorCallback(data);
                     }
                     else {
-                        argsCollection.returnCallback(data == undefined ? undefined : JSON.parse(data));
+                        try {
+                            data = data == '' ? undefined : JSON.parse(data);
+                        }
+                        catch (e) {
+                            util.log("JSON Parse error on data: '" + data + "'");
+                        }
+                        argsCollection.returnCallback(data);
                     }
                 });
             }).on('error', function(e) {
@@ -59,4 +65,6 @@ HttpProxy.prototype.proxyCall = function(method, args) {
             });
 }
 
-module.exports = HttpProxy;
+module.exports = function(service, host, port) {
+    return new HttpProxy(service, host, port);
+}

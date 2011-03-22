@@ -19,7 +19,7 @@ var proxy = servicefactory.createProxy('manager', {
     location: 'local',
     implementation: 'manager/distributed'
 });
-proxy.setConfig(require('config/worker'));
+proxy.setConfig(require('config/distributed'));
 managerPort.bindService(proxy);
 managerPort.start(config.managerPort.port, config.managerPort.hostname);
 sys.log("managerPort listening on " + config.managerPort.hostname + ":" + config.managerPort.port);

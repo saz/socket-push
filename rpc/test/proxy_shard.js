@@ -6,10 +6,10 @@ var fixture = require('test/fixtures/rpc');
 
 exports["unshardable"] = function (test) {
 
-    var shard1 = new localProxy(fixture.serviceShardInt, fixture.proxiedShardInt);
-    var shard2 = new localProxy(fixture.serviceShardInt, fixture.proxiedShardInt2);
+    var shard1 = localProxy(fixture.serviceShardInt, fixture.proxiedShardInt);
+    var shard2 = localProxy(fixture.serviceShardInt, fixture.proxiedShardInt2);
 
-    var testService = new shardProxy(fixture.serviceShardInt, 'arg');
+    var testService = shardProxy(fixture.serviceShardInt, 'arg');
     testService.addShard(shard1);
 
     test.throws(function () {
@@ -23,10 +23,10 @@ exports["unshardable"] = function (test) {
 
 exports["shardByInt"] = function (test) {
 
-    var shard1 = new localProxy(fixture.serviceShardInt, fixture.proxiedShardInt);
-    var shard2 = new localProxy(fixture.serviceShardInt, fixture.proxiedShardInt2);
+    var shard1 = localProxy(fixture.serviceShardInt, fixture.proxiedShardInt);
+    var shard2 = localProxy(fixture.serviceShardInt, fixture.proxiedShardInt2);
 
-    var testService = new shardProxy(fixture.serviceShardInt, 'arg1');
+    var testService = shardProxy(fixture.serviceShardInt, 'arg1');
     testService.addShard(shard1);
     testService.addShard(shard2);
     var myResult;
@@ -49,7 +49,7 @@ exports["shardByInt"] = function (test) {
 }
 
 exports["stringHash"] = function (test) {
-    var testService = new shardProxy(fixture.serviceShardInt, 'arg1');
+    var testService = shardProxy(fixture.serviceShardInt, 'arg1');
 
     test.equals(0, testService.hashString('foo') % 2);
     test.equals(1, testService.hashString('1') % 2);
@@ -59,10 +59,10 @@ exports["stringHash"] = function (test) {
 
 exports["shardByString"] = function (test) {
 
-    var shard1 = new localProxy(fixture.serviceShardString, fixture.proxiedShardString);
-    var shard2 = new localProxy(fixture.serviceShardString, fixture.proxiedShardString2);
+    var shard1 = localProxy(fixture.serviceShardString, fixture.proxiedShardString);
+    var shard2 = localProxy(fixture.serviceShardString, fixture.proxiedShardString2);
 
-    var testService = new shardProxy(fixture.serviceShardString, 'arg1');
+    var testService = shardProxy(fixture.serviceShardString, 'arg1');
     testService.addShard(shard1);
     testService.addShard(shard2);
     var myResult;

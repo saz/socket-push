@@ -1,4 +1,4 @@
-var Proxy = require('rpc/proxy');
+var Proxy = require('rpc/proxy').Abstract;
 var rpcMarshal = require('rpc/marshal');
 var util = require('util');
 
@@ -20,4 +20,6 @@ LocalProxy.prototype.proxyCall = function(method, args) {
     }
 }
 
-module.exports = LocalProxy;
+module.exports = function(service, bindObject) {
+    return new LocalProxy(service, bindObject);
+}

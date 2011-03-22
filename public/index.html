@@ -19,7 +19,7 @@
 
     $('#connectForm').hide();
 
-    var socket = new io.Socket(null, {port: 8080, rememberTransport: false});
+    var socket = new io.Socket(null, {port: window.location.port, rememberTransport: false});
 
     socket.connect();
     socket.on('connect', function(obj) {
