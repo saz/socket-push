@@ -16,7 +16,7 @@
   , "web" : "http://github.com/brstgt/socket-push/issues"
   }
 , "bin" : {
-    "socket-push" : "./daemon.js"
+    "socket-push" : "./daemonizer.js"
 }
 , "directories" : { "config" : "./config"
                   , "lib" : "./lib"

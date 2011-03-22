@@ -1,9 +1,12 @@
+#!/usr/bin/node
+
 var base = __dirname;
 require.paths.push(base);
 require.paths.push(base + '/lib');
 require.paths.push(base + '/rpc/lib');
 
-var sys = require(process.binding('natives').util ? 'util' : 'sys');
+var sys = require(process.binding('natives').util ? 'util' : 'sys'),
+    daemonize = require('daemonizer');
 
 try {
     /**
@@ -21,6 +24,14 @@ try {
         /**
          * Get cli options
          */
+
+        // Usage
+        options.getOption('-h', undefined, function(err, value) {
+            sys.log("Usage: " + process.argv[1] + " [start|stop] [--role=worker] [--manager=HOST] [--node=NODE]");
+            process.exit();
+        });
+
+        // Worker role, manager by distributed config manager
         options.getOption('--role', undefined, function(err, value) {
             switch (value) {
                 case undefined:
@@ -66,7 +77,29 @@ try {
             configManager.setConfig(require('config/worker'));
         }
 
-        // set process title - doesn't work in all OS
+        /**
+         * Handle daemon start/stop
+         */
+        var pidFile = base + '/run/socke-push-' + nodeId + '.pid';
+        try {
+            switch (process.argv[2]) {
+                case "start":
+                    sys.log("Start service for node " + nodeId);
+                    daemonize.start(pidFile);
+                    break;
+                case "stop":
+                    sys.log("Stop service for node " + nodeId);
+                    daemonize.stop(pidFile);
+            }
+        }
+        catch (e) {
+            sys.log("Error daemonizing: " + e);
+            process.exit();
+        }
+
+        /**
+         * set process title - doesn't work in all OS
+         */
         process.title = 'socket-push-' + nodeId;
 
         worker = require('service/worker')(nodeId, servicefactory, configManager);
@@ -75,6 +108,5 @@ try {
 
 }
 catch (e) {
-    throw e;
     sys.log("Error: " + e);
 }

@@ -71,6 +71,4 @@ TODO
 ** elect spare workers on node down
 * abstraction for distributed config, node and election strategy
 * proper logging
-* proper daemonizing
-* setproctitle
 * move rpc to seperate repository
