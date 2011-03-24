@@ -1,5 +1,6 @@
-var Proxy = require('rpc/proxy').Abstract;
-var util = require('util');
+var Proxy = require('rpc/proxy').Abstract,
+    util = require('util');
+    logger = require('logger').getLogger('rpc');
 
 function ShardedProxy(service, shardByParam) {
     Proxy.call(this, service);
@@ -15,7 +16,7 @@ ShardedProxy.prototype.getShards = function() {
 }
 
 ShardedProxy.prototype.errorHandler = function(exception, emitter) {
-    util.log("Shard " + emitter.shardId + " is erroneous: " + exception);
+    logger.warn("Shard " + emitter.shardId + " is erroneous: " + exception);
 }
 
 ShardedProxy.prototype.addShard = function(proxyObject) {
@@ -73,7 +74,6 @@ ShardedProxy.prototype.proxyCall = function(method, args) {
             }
 
             shardObject = this.shards[shardId];
-            //util.log("Shard '" + method + "' to " + util.inspect(shardObject));
             shardObject[method].apply(shardObject, args);
             return;
         }

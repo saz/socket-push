@@ -1,6 +1,5 @@
-var sys = require(process.binding('natives').util ? 'util' : 'sys');
-var localServices = {};
-var proxyServices = {};
+var localServices = {},
+    proxyServices = {};
 
 exports.getLocalService = function(serviceName) {
     return localServices[serviceName];

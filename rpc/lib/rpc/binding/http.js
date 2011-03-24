@@ -1,14 +1,8 @@
 
-function HttpBinding() {
-    var connect = require('connect'),
-        rpcMarshal = require('rpc/marshal');
-
-    var server = connect(
-//        connect.logger(),
-        connect.static(__dirname + '/../../../public')
-    );
-
-    var api = {};
+function HttpBinding(server) {
+    var rpcMarshal = require('rpc/marshal'),
+        connect = require('connect'),
+        api = {};
 
     this.bindService = function(bindObject) {
         definition = bindObject.serviceDefinition;
@@ -67,6 +61,22 @@ function HttpBinding() {
         }));
     }
 
+    this.setLogger = function(log4js, level, format) {
+        var logStream = {
+            writable: true,
+            write: function(string) {
+                log4js[level](string.substring(0, string.length - 1));
+            },
+            end: function() {},
+            destroy: function() {}
+        }
+
+        server.use(connect.logger({
+            format: format,
+            stream: logStream
+        }));
+    }
+
     this.start = function(port, hostname) {
         server.use(connect.router(function(app) {
             app.get('/api', function(req, res, next) {
@@ -88,6 +98,6 @@ function HttpBinding() {
     }
 }
 
-module.exports = function() {
-    return new HttpBinding();
+module.exports = function(connectServer) {
+    return new HttpBinding(connectServer);
 }

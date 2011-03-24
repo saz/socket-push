@@ -1,6 +1,6 @@
-var Proxy = require('rpc/proxy').Abstract;
-var rpcMarshal = require('rpc/marshal');
-var util = require('util');
+var Proxy = require('rpc/proxy').Abstract,
+    rpcMarshal = require('rpc/marshal'),
+    logger = require('logger').getLogger('rpc');
 
 function HttpProxy(service, host, port) {
     Proxy.call(this, service);
@@ -55,7 +55,7 @@ HttpProxy.prototype.proxyCall = function(method, args) {
                             data = data == '' ? undefined : JSON.parse(data);
                         }
                         catch (e) {
-                            util.log("JSON Parse error on data: '" + data + "'");
+                            logger.warn("JSON Parse error on data: '" + data + "'");
                         }
                         argsCollection.returnCallback(data);
                     }

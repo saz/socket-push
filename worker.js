@@ -5,8 +5,8 @@ require.paths.push(base);
 require.paths.push(base + '/lib');
 require.paths.push(base + '/rpc/lib');
 
-var sys = require(process.binding('natives').util ? 'util' : 'sys'),
-    daemonize = require('daemonizer');
+var daemonize = require('daemonizer'),
+    logger = require('logger').getLogger('worker');
 
 try {
     /**
@@ -27,7 +27,7 @@ try {
 
         // Usage
         options.getOption('-h', undefined, function(err, value) {
-            sys.log("Usage: " + process.argv[1] + " [start|stop] [--role=worker] [--manager=HOST] [--node=NODE]");
+            logger.fatal("Usage: " + process.argv[1] + " [start|stop] [--role=worker] [--manager=HOST] [--node=NODE]");
             process.exit();
         });
 
@@ -51,7 +51,7 @@ try {
                     if (nodeId == undefined) {
                         throw "Role worker needs --node option";
                     }
-                    sys.log("Load remote config from " + value);
+                    logger.debug("Load remote config from " + value);
                     var parts = manager.split(':');
                     configManager = servicefactory.createProxy('manager', {
                         location: 'remote',
@@ -69,7 +69,7 @@ try {
          */
         if (initStatus == 0) {
             nodeId = 'standalone';
-            sys.log("Load local config");
+            logger.debug("Load local config");
             var configManager = servicefactory.createProxy('manager', {
                 location: 'local',
                 implementation: 'manager/standalone'
@@ -84,16 +84,16 @@ try {
         try {
             switch (process.argv[2]) {
                 case "start":
-                    sys.log("Start service for node " + nodeId);
+                    logger.info("Start service for node " + nodeId);
                     daemonize.start(pidFile);
                     break;
                 case "stop":
-                    sys.log("Stop service for node " + nodeId);
+                    logger.info("Stop service for node " + nodeId);
                     daemonize.stop(pidFile);
             }
         }
         catch (e) {
-            sys.log("Error daemonizing: " + e);
+            logger.error("Error daemonizing: " + e);
             process.exit();
         }
 
@@ -108,5 +108,5 @@ try {
 
 }
 catch (e) {
-    sys.log("Error: " + e);
+    logger.fatal("Error: " + e);
 }

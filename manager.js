@@ -6,10 +6,11 @@ require.paths.push(base + '/lib');
 require.paths.push(base + '/rpc/lib');
 
 var config = require('config/manager'),
-    sys = require(process.binding('natives').util ? 'util' : 'sys'),
-    managerPort = require('rpc/binding/http')(),
-    daemonize = require('daemonizer');
-    ;
+    connect,
+    server,
+    managerPort,
+    daemonize = require('daemonizer'),
+    logger = require('logger').getLogger('manager');
 
 /**
  * Handle daemon start/stop
@@ -18,16 +19,16 @@ var pidFile = base + '/run/socke-push-manager.pid';
 try {
     switch (process.argv[2]) {
         case "start":
-            sys.log("Start service for manager");
+            logger.info("Start service for manager");
             daemonize.start(pidFile);
             break;
         case "stop":
-            sys.log("Stop service for manager ");
+            logger.info("Stop service for manager ");
             daemonize.stop(pidFile);
     }
 }
 catch (e) {
-    sys.log("Error daemonizing: " + e);
+    logger.error("Error daemonizing: " + e);
     process.exit();
 }
 
@@ -44,7 +45,28 @@ var proxy = require('rpc/servicefactory').createProxy('manager', {
     location: 'local',
     implementation: 'manager/distributed'
 });
+
+/**
+ * Format options
+:req[header] ex: :req[Accept]
+:res[header] ex: :res[Content-Length]
+:http-version
+:response-time
+:remote-addr
+:date
+:method
+:url
+:referrer
+:user-agent
+:status
+ */
+connect = require('connect'),
+server = connect(
+    connect.static(__dirname + '/rpc/public')
+);
+managerPort = require('rpc/binding/http')(server);
+managerPort.setLogger(require('logger').getLogger('manager_http'), 'info');
 proxy.setConfig(require('config/distributed'));
 managerPort.bindService(proxy);
 managerPort.start(config.managerPort.port, config.managerPort.hostname);
-sys.log("managerPort listening on " + config.managerPort.hostname + ":" + config.managerPort.port);
+logger.info("managerPort listening on " + config.managerPort.hostname + ":" + config.managerPort.port);
