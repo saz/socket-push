@@ -70,4 +70,5 @@ TODO
 * worker.heartbeat method
 ** elect spare workers on node down
 * abstraction for distributed config, node and election strategy
-* move rpc to seperate repository
+* allow client to subscribe to channels optionally
+* optionally subscribe to channel as session instead of user
