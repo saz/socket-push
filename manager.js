@@ -3,9 +3,9 @@
 var base = __dirname;
 require.paths.push(base);
 require.paths.push(base + '/lib');
-require.paths.push(base + '/rpc/lib');
 
 var config = require('config/manager'),
+    noderpc = require('noderpc'),
     connect,
     server,
     managerPort,
@@ -41,7 +41,7 @@ process.title = 'socket-push-manager';
  * Create admin port
  */
 
-var proxy = require('rpc/servicefactory').createProxy('manager', {
+var proxy = noderpc.createProxy('manager', {
     location: 'local',
     implementation: 'manager/distributed'
 });
@@ -64,7 +64,7 @@ connect = require('connect'),
 server = connect(
     connect.static(__dirname + '/rpc/public')
 );
-managerPort = require('rpc/binding/http')(server);
+managerPort = noderpc.createServer(server);
 managerPort.setLogger(require('logger').getLogger('manager_http'), 'info');
 proxy.setConfig(require('config/distributed'));
 managerPort.bindService(proxy);

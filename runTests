@@ -7,12 +7,10 @@ var child = spawn('node', [__dirname + '/rpc/test/fixtures/server.js']);
 
 require.paths.push(__dirname);
 require.paths.push(__dirname + '/lib');
-require.paths.push(__dirname + '/rpc');
-require.paths.push(__dirname + '/rpc/lib');
 
 var testrunner = require('nodeunit').reporters.default;
 
 process.chdir(__dirname);
 
-testrunner.run(['rpc/test', 'test']);
+testrunner.run(['test']);
 

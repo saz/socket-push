@@ -3,7 +3,6 @@
 var base = __dirname;
 require.paths.push(base);
 require.paths.push(base + '/lib');
-require.paths.push(base + '/rpc/lib');
 
 var daemonize = require('daemonizer'),
     logger = require('logger').getLogger('worker');
@@ -15,7 +14,7 @@ try {
      */
     (function() {
         var options = require('options'),
-            servicefactory = require('rpc/servicefactory'),
+            noderpc = require('noderpc'),
             configManager,
             worker,
             nodeId = 0,
@@ -53,7 +52,7 @@ try {
                     }
                     logger.debug("Load remote config from " + value);
                     var parts = manager.split(':');
-                    configManager = servicefactory.createProxy('manager', {
+                    configManager = noderpc.createProxy('manager', {
                         location: 'remote',
                         host: parts[0],
                         port: parts[1] || 80
@@ -70,7 +69,7 @@ try {
         if (initStatus == 0) {
             nodeId = 'standalone';
             logger.debug("Load local config");
-            var configManager = servicefactory.createProxy('manager', {
+            var configManager = noderpc.createProxy('manager', {
                 location: 'local',
                 implementation: 'manager/standalone'
             });
@@ -102,7 +101,7 @@ try {
          */
         process.title = 'socket-push-' + nodeId;
 
-        worker = require('service/worker')(nodeId, servicefactory, configManager);
+        worker = require('service/worker')(nodeId, require('noderpc/proxyfactory'), configManager);
         worker.loadConfig();
     })();
 
