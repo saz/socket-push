@@ -17,7 +17,7 @@ try {
             noderpc = require('noderpc'),
             configManager,
             worker,
-            nodeId,
+            nodeId = 0,
             initStatus = 0;
 
         /**
@@ -51,9 +51,8 @@ try {
                     if (nodeId == undefined) {
                         throw new Error("Role worker needs --node option");
                     }
-                    logger.debug("Load remote config from " + manager);
+                    logger.debug("Load remote config from " + value);
                     var parts = manager.split(':');
-
                     configManager = noderpc.createProxy('manager', {
                         location: 'remote',
                         host: parts[0],

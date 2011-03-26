@@ -1,12 +1,16 @@
 module.exports = {
     nodes: {
         node1: {
-            clientPort: {hostname: '127.0.0.1', port: 8080},
-            adminPort: {hostname: '127.0.0.1', port: 8181}
+            clientPort: {hostname: '127.0.0.1', port: 8101},
+            adminPort: {hostname: '127.0.0.1', port: 8201}
         },
         node2: {
-            clientPort: {hostname: '127.0.0.1', port: 9090},
-            adminPort: {hostname: '127.0.0.1', port: 9191}
+            clientPort: {hostname: '127.0.0.1', port: 8102},
+            adminPort: {hostname: '127.0.0.1', port: 8202}
+        },
+        spare1: {
+            clientPort: {hostname: '127.0.0.1', port: 8103},
+            adminPort: {hostname: '127.0.0.1', port: 8203}
         }
     },
     options: {

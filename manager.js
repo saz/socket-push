@@ -61,12 +61,13 @@ var proxy = noderpc.createProxy('manager', {
 :status
  */
 connect = require('connect'),
-server = connect(
-    connect.static(__dirname + '/rpc/public')
-);
+server = connect();
 managerPort = noderpc.createServer(server);
+managerPort.serveStatic();
 managerPort.setLogger(require('logger').getLogger('manager_http'), 'info');
-proxy.setConfig(require('config/distributed'));
+proxy.setConfig(require('config/distributed'), function() {}, function (err) {
+    throw err;
+});
 managerPort.bindService(proxy);
 managerPort.start(config.managerPort.port, config.managerPort.hostname);
 logger.info("managerPort listening on " + config.managerPort.hostname + ":" + config.managerPort.port);
