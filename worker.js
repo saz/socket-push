@@ -17,7 +17,7 @@ try {
             noderpc = require('noderpc'),
             configManager,
             worker,
-            nodeId = 0,
+            nodeId,
             initStatus = 0;
 
         /**
@@ -37,6 +37,7 @@ try {
                 case 'standalone':
                     break;
                 case 'worker':
+                    var manager;
                     initStatus = 1;
                     options.getOption('--node', undefined, function(err, value) {
                         nodeId = value;
@@ -45,13 +46,14 @@ try {
                         manager = value;
                     });
                     if (manager == undefined) {
-                        throw "Role worker needs --manager option";
+                        throw new Error("Role worker needs --manager option");
                     }
                     if (nodeId == undefined) {
-                        throw "Role worker needs --node option";
+                        throw new Error("Role worker needs --node option");
                     }
-                    logger.debug("Load remote config from " + value);
+                    logger.debug("Load remote config from " + manager);
                     var parts = manager.split(':');
+
                     configManager = noderpc.createProxy('manager', {
                         location: 'remote',
                         host: parts[0],
@@ -59,7 +61,7 @@ try {
                     });
                     break;
                 default:
-                    throw "Unknown role " + value;
+                    throw new Error("Unknown role " + value);
             }
         });
 
