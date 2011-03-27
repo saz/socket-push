@@ -7,3 +7,12 @@
 [submodule "lib/daemon"]
 	path = lib/daemon
 	url = git://github.com/Slashed/daemon.node.git
+[submodule "lib/nimble"]
+	path = lib/nimble
+	url = git://github.com/caolan/nimble.git
+[submodule "lib/log4js"]
+	path = lib/log4js
+	url = git://github.com/csausdev/log4js-node.git
+[submodule "lib/noderpc"]
+	path = lib/noderpc
+	url = git://github.com/brstgt/noderpc.git
