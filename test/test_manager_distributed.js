@@ -60,8 +60,8 @@ exports["getConfig"] = function (test) {
     mgr.setConfig(fixture);
 
     test.deepEqual({
-        clientPort: {hostname: '127.0.0.1', port: 8080},
-        adminPort: {hostname: '127.0.0.1', port: 8181},
+        clientPort: {hostname: '127.0.0.1', port: 8101},
+        adminPort: {hostname: '127.0.0.1', port: 8201},
         options: {
             removeUserAfterDisconnectTimeOut: 20000, // Millieconds
             authenticationTimeOut: 10000 // Millieconds
@@ -80,17 +80,49 @@ exports["getConfig"] = function (test) {
                     {
                         location: 'remote',
                         hostname: '127.0.0.1',
-                        port: 9191
+                        port: 8202
                     }
                 ]
              },
             channel: {
                 location: 'remote',
                 hostname: '127.0.0.1',
-                port: 9191
+                port: 8202
             }
-        }
+        },
+        isSpareNode: false
     }, mgr.getConfig('node1'));
 
+    test.done();
+}
+
+exports["replaceNode"] = function (test) {
+    var services = {
+        auth: {
+            nodes: ['node1']
+        },
+        user: {
+            shardBy: 'userId',
+            nodes: ['node1', 'node2']
+        },
+        channel: {
+            shardBy: 'channelId',
+            nodes: ['node2']
+        }
+    };
+    mgr.replaceNode(services, "node1", "spare1");
+    test.deepEqual(services, {
+        auth: {
+            nodes: ['spare1']
+        },
+        user: {
+            shardBy: 'userId',
+            nodes: ['spare1', 'node2']
+        },
+        channel: {
+            shardBy: 'channelId',
+            nodes: ['node2']
+        }
+    });
     test.done();
 }

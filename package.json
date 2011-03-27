@@ -1,7 +1,7 @@
 { "name" : "socket-push"
 , "description" : "A highly scaleable COMET solution"
 , "keywords" : [ "socket-push", "comet", "websockets" ]
-, "version" : "0.1.1beta"
+, "version" : "0.1.2beta"
 , "homepage" : "http://www.kwick.de/"
 , "author" : "Benjamin Roth <benjamin.roth@kwick.de> (http://www.kwick.de)"
 , "contributors" :
@@ -26,7 +26,7 @@
                   , "test" : "./test"
                   }
 , "main" : "socket-push"
-, "dependencies" : { "noderpc" : ">= 0.1.1", "socket.io" : ">= 0.6.16" , "connect": ">= 1.0.6", "daemon": "0.3.0", "log4js": "0.2.4", "nimble": "0.0.2", "fork": "0.0.2"}
+, "dependencies" : { "noderpc" : ">= 0.1.2", "socket.io" : ">= 0.6.16" , "connect": ">= 1.0.6", "daemon": "0.3.0", "log4js": "0.2.4", "nimble": "0.0.2"}
 , "devDependencies" : { }
 , "engines" : { "node" : "0.4 || 0.5" }
 , "scripts" : { "test" : "./runTests"
