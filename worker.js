@@ -53,9 +53,10 @@ try {
                     }
                     logger.debug("Load remote config from " + value);
                     var parts = manager.split(':');
+                        logger.debug(parts[0] + "=" + parts[1]);
                     configManager = noderpc.createProxy('manager', {
                         location: 'remote',
-                        host: parts[0],
+                        hostname: parts[0],
                         port: parts[1] || 80
                     });
                     break;
@@ -108,5 +109,5 @@ try {
 
 }
 catch (e) {
-    logger.fatal("Error: " + e);
+    logger.fatal("Error: " + e.message);
 }
