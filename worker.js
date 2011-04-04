@@ -17,7 +17,7 @@ try {
             noderpc = require('noderpc'),
             configManager,
             worker,
-            nodeId = 0,
+            nodeId,
             initStatus = 0;
 
         /**
@@ -53,7 +53,6 @@ try {
                     }
                     logger.debug("Load remote config from " + value);
                     var parts = manager.split(':');
-                        logger.debug(parts[0] + "=" + parts[1]);
                     configManager = noderpc.createProxy('manager', {
                         location: 'remote',
                         hostname: parts[0],
