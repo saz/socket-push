@@ -27,8 +27,10 @@ try {
             daemonize.stop(pidFile);
             break;
         default:
-            logger.fatal('unknown command: ' + process.argv[2]);
-            process.exit();
+            if (typeof process.argv[2] !== 'undefined') {
+                logger.fatal('unknown command: ' + process.argv[2]);
+                process.exit();
+            }
             break;
     }
 }
