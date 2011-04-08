@@ -15,7 +15,7 @@ var config = require('config/manager'),
 /**
  * Handle daemon start/stop
  */
-var pidFile = base + '/run/socke-push-manager.pid';
+var pidFile = base + '/run/socket-push-manager.pid';
 try {
     switch (process.argv[2]) {
         case "start":
@@ -25,6 +25,11 @@ try {
         case "stop":
             logger.info("Stop service for manager ");
             daemonize.stop(pidFile);
+            break;
+        default:
+            logger.fatal('unknown command: ' + process.argv[2]);
+            process.exit();
+            break;
     }
 }
 catch (e) {
