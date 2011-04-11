@@ -1,6 +1,7 @@
 var util = require('util');
 var mgr = require('service/manager/distributed')();
 var fixture = require('config/distributed');
+var fixtureSsl = require('config/distributed-ssl');
 
 exports["setConfig undefined node"] = function (test) {
     test.throws(function () {
@@ -61,6 +62,51 @@ exports["getConfig"] = function (test) {
 
     test.deepEqual({
         clientPort: {hostname: '127.0.0.1', port: 8101},
+        adminPort: {hostname: '127.0.0.1', port: 8201},
+        options: {
+            removeUserAfterDisconnectTimeOut: 20000, // Millieconds
+            authenticationTimeOut: 10000 // Millieconds
+        },
+        services: {
+            auth: {
+                location: 'local'
+            },
+            user: {
+                location: 'shard',
+                shardBy: 'userId',
+                shards: [
+                    {
+                        location: 'local'
+                    },
+                    {
+                        location: 'remote',
+                        hostname: '127.0.0.1',
+                        port: 8202
+                    }
+                ]
+             },
+            channel: {
+                location: 'remote',
+                hostname: '127.0.0.1',
+                port: 8202
+            }
+        },
+        isSpareNode: false
+    }, mgr.getConfig('node1'));
+
+    test.done();
+}
+
+exports["getConfigSsl"] = function (test) {
+    mgr.setConfig(fixtureSsl);
+
+    test.deepEqual({
+        clientPort: {
+            hostname: '127.0.0.1',
+            port: 8101,
+            sslKey: '/path/to/ssl.key',
+            sslCert: '/path/to.crt'
+        },
         adminPort: {hostname: '127.0.0.1', port: 8201},
         options: {
             removeUserAfterDisconnectTimeOut: 20000, // Millieconds
