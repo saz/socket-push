@@ -6,7 +6,7 @@
 , "author" : "Benjamin Roth <benjamin.roth@kwick.de> (http://www.kwick.de)"
 , "contributors" :
   [ "Steffen Zieger <steffen.zieger@kwick.de> (http://www.kwick.de)"
-  ,  "Jens Nistler <spam@jensnistler.de> (http://www.jensnistler.de)"
+  ,  "Jens Nistler <npm@jensnistler.de> (http://www.jensnistler.de)"
   ]
 , "repository" :
   { "type" : "git"
