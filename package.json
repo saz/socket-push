@@ -1,7 +1,7 @@
 { "name" : "socket-push"
 , "description" : "A highly scaleable COMET solution"
 , "keywords" : [ "socket-push", "comet", "websockets" ]
-, "version" : "0.1.2-3beta"
+, "version" : "0.1.2-4beta"
 , "homepage" : "http://www.kwick.de/"
 , "author" : "Benjamin Roth <benjamin.roth@kwick.de> (http://www.kwick.de)"
 , "contributors" :
