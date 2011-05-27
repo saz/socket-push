@@ -1,0 +1,41 @@
+{
+    "appenders": [
+        {
+            "category": "worker",
+            "type": "console"
+        },
+        {
+            "category": "worker_http",
+            "type": "file",
+            "filename": "worker_http.log"
+        },
+        {
+            "category": "manager",
+            "type": "console"
+        },
+        {
+            "category": "manager_http",
+            "type": "file",
+            "filename": "manager_http.log",
+            "layout": {
+                "type": "messagePassThrough"
+            }
+        },
+        {
+            "category": "noderpc",
+            "type": "console"
+        },
+        {
+            "category": "socket.io",
+            "type": "console"
+        }
+    ],
+    "levels": {
+        "worker": "TRACE",
+        "worker_http": "TRACE",
+        "manager": "TRACE",
+        "manager_http": "TRACE",
+        "noderpc": "TRACE",
+        "socket.io": "TRACE"
+    }
+}

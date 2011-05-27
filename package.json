@@ -1,0 +1,40 @@
+{ "name" : "socket-push"
+, "description" : "A highly scaleable COMET solution"
+, "keywords" : [ "socket-push", "comet", "websockets" ]
+, "version" : "0.1.2-7beta"
+, "homepage" : "http://www.kwick.de/"
+, "author" : "Benjamin Roth <benjamin.roth@kwick.de> (http://www.kwick.de)"
+, "contributors" :
+  [ "Steffen Zieger <steffen.zieger@kwick.de> (http://www.kwick.de)"
+  ,  "Jens Nistler <npm@jensnistler.de> (http://www.jensnistler.de)"
+  ]
+, "repository" :
+  { "type" : "git"
+  , "url" : "git://github.com/brstgt/socket-push"
+  }
+, "bugs" :
+  { "mail" : "benjamin.roth@kwick.de"
+  , "web" : "http://github.com/brstgt/socket-push/issues"
+  }
+, "bin" : {
+    "socket-push" : "./worker.js",
+    "socket-push-manager" : "./manager.js"
+}
+, "directories" : { "config" : "./config"
+                  , "lib" : "./lib"
+                  , "public" : "./public"
+                  , "run" : "./run"
+                  , "test" : "./test"
+                  }
+, "main" : "socket-push"
+, "dependencies" : { "noderpc" : ">= 0.1.2-4", "socket.io" : ">= 0.6.18" , "connect": ">= 1.0.6", "daemon": "0.3.0", "log4js": "0.2.4", "nimble": "0.0.2"}
+, "devDependencies" : { }
+, "engines" : { "node" : "0.4 || 0.5" }
+, "scripts" : { "test" : "./runTests"
+              }
+, "licenses" :
+  [ { "type" : "GPLv2"
+    , "url" : "https://github.com/brstgt/socket-push/raw/master/LICENSE"
+    }
+  ]
+}

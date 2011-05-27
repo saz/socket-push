@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+    <title>socket-push Client Helper</title>
+
+    <script src="/json.js"></script>
+    <!-- for ie -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+</head>
+<body>
+
+<script>
+    function connect() {
+        var userId = document.getElementById('userId').value;
+        var sessionId = document.getElementById('sessionId').value;
+        socket.send('{"userId":"' + userId + '","hash":"' + sessionId + '"}');
+    }
+
+    $('#connectForm').hide();
+
+    var socket = new io.Socket(null, {port: window.location.port, rememberTransport: false});
+
+    socket.connect();
+    socket.on('connect', function(obj) {
+        $('#connectForm').show();
+        $('#response').html("<p>Please authenticate</p>");
+    });
+    socket.on('disconnect', function(obj) {
+        $('#connectForm').hide();
+        $('#response').html("<p>Disconnected</p>");
+    });
+    socket.on('message', function(obj) {
+        if (obj.auth !== undefined) {
+            $('#connectForm').hide();
+            $('#response').html('');
+        }
+        $('#response').append("<p>Received: " + JSON.stringify(obj) + "</p>");
+    });
+</script>
+
+<h1>socket-push Client Helper</h1>
+
+<div id="response"><p>Connecting ...</p></div>
+<form id="connectForm" onsubmit="connect(); return false">
+    <label for="userId">UserId:</label> <input type="text" id="userId">
+    <label for="sessionId">SessionId:</label> <input type="text" id="sessionId">
+    <input type="submit" value="Send">
+</form>
+
+<style>
+    body {
+        background: #FEFEFE;
+        font: 12px Arial;
+    }
+
+    #response {
+        height: 300px;
+        overflow: auto;
+        width: 800px;
+        border: 1px solid #eee;
+        font: 13px Helvetica, Arial;
+    }
+
+    #response p {
+        padding: 8px;
+        margin: 0;
+    }
+
+    #response p:nth-child(odd) {
+        background: #F6F6F6;
+    }
+
+    #connectForm {
+        width: 782px;
+        background: #333;
+        padding: 5px 10px;
+        display: none;
+    }
+
+    #connectForm label {
+        color: #cccccc;
+    }
+
+    #userId {
+        width: 50px;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+    }
+
+    #sessionId {
+        width: 130px;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+    }
+
+    #form input[type=submit] {
+        cursor: pointer;
+        background: #999;
+        border: none;
+        padding: 6px 8px;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        margin-left: 5px;
+        text-shadow: 0 1px 0 #fff;
+    }
+
+    #form input[type=submit]:hover {
+        background: #A2A2A2;
+    }
+
+    #form input[type=submit]:active {
+        position: relative;
+        top: 2px;
+    }
+</style>
+
+</body>
+</html>
