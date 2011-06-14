@@ -1,7 +1,5 @@
 #!/usr/bin/node
 
-// TODO: is this really required?
-// noderpc depends on it...
 require.paths.push(__dirname);
 require.paths.push(__dirname + '/lib');
 
@@ -13,12 +11,17 @@ var logger =log4js.getLogger();
 optParser.command('manager')
     .opts({
         config: {
-            string: '-c, --config',
-            default: 'config.json',
+            string: '-c FILE, --config=FILE',
             help: 'Config file to use',
+            required: true,
+        },
+        daemon: {
+            position: 1,
+            default: false,
+            help: 'Start/Stop daemon mode',
         },
     })
-    .callback(runManager)
+    .callback(runDaemon)
     .help("run a manager");
 
 optParser.command('worker')
@@ -36,20 +39,66 @@ optParser.command('worker')
         logfile: {
             string: '-l FILE, --logfile=FILE',
             help: 'Logfile to use',
+            required: true,
         },
         pidfile: {
             string: '-p FILE, --pidfile=FILE',
             help: 'Pidfile to use',
-            required: true
+            required: true,
+        },
+        daemon: {
+            position: 1,
+            default: false,
+            help: 'Start/Stop daemon mode',
         },
     })
-    .callback(runWorker)
+    .callback(runDaemon)
     .help("run a worker instance");
 
 optParser.parseArgs();
 
 
-function runWorker(options) {
+function runDaemon(options) {
+    var daemon = require('daemon'),
+        fs = require('fs'),
+        sys = require('sys');
+
+    if(typeof(options.config) !== 'undefined') {
+        config = require(options.config);
+        pidfile = config.manager.pidfile;
+        logfile = config.manager.logfile;
+    } else {
+        config = false;
+        pidfile = options.pidfile;
+        logfile = options.logfile;
+    }
+
+    switch(options.daemon) {
+        case "stop":
+            PID = parseInt(fs.readFileSync(pidfile));
+            sys.puts('Stopping daemon with pid: ' + PID);
+            try {
+                process.kill(PID);
+                process.exit();
+            } catch (e) {
+                sys.puts('No running process with pid ' + PID + ' found. None killed.');
+            }
+            break;
+        case "start":
+            daemon.daemonize(logfile, pidfile, function (err, pid) {
+                if (err) return sys.puts('Error starting daemon: ' + err);
+                sys.puts('Daemon started successfully with pid: ' + pid);
+                eval(options[0])(options, config);
+            });
+            break;
+        default:
+            eval(options[0])(options, config);
+            break;
+    }
+}
+
+
+function worker(options) {
     process.title = 'socket-push worker ' + options.nodeid;
 
     var noderpc = require('noderpc'),
@@ -65,14 +114,13 @@ function runWorker(options) {
     worker.loadConfig();
 }
 
-function runManager(options) {
+
+function manager(options, config) {
+    var noderpc = require('noderpc'),
+        connect = require('connect'),
+        logger = require('log4js')().getLogger();
     process.title = 'socket-push manager';
 
-    var config = require('config/socket-push.conf'),
-        noderpc = require('noderpc'),
-        connect = require('connect'),
-        managerPort,
-        logger = require('log4js')().getLogger();
 
     var proxy = noderpc.createProxy('manager', {
         location: 'local',
@@ -88,4 +136,5 @@ function runManager(options) {
     managerPort.bindService(proxy);
     managerPort.start(config.manager.port, config.manager.listen);
     logger.info("managerPort listening on " + config.manager.listen + ":" + config.manager.port);
+
 }

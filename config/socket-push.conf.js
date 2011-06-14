@@ -50,6 +50,7 @@ module.exports = {
     },
     manager: {
         pidfile: '/tmp/socket-push-manager.pid',
+        logfile: '/tmp/socket-push-manager.log',
         listen: '127.0.0.1',
         port: 8282,
         workerConnectRetry: 10000 // Milliseconds
